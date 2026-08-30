@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <!--
-        Project: GitHub Prep and Structural Implementation
+        Project: Creating and Referencing DOM Elements
         Name: Angel Avila
         Date: August 30, 2026
-        Purpose: This portfolio index file establishes the core HTML structure, 
-        navigation links, content sections (About, Projects, Contact), and uses 
-        JavaScript prompt interactions to personalize the user's welcome message.
+        Purpose: This portfolio index file implements dynamic DOM element creation, 
+        selector-based element modifications, and a timed confirmation message for form submissions.
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -108,12 +107,18 @@
         button:hover {
             background: #34495e;
         }
+        /* Styling for dynamic form status messages */
+        #formStatus {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Angel Avila</h1>
+        <h1 id="headerTitle">Angel Avila</h1>
         <nav>
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
@@ -128,14 +133,14 @@
     <div class="container">
         <!-- About Section -->
         <section id="about">
-            <h2>About Me</h2>
+            <h2 id="aboutHeading">About Me</h2>
             <p>Hello! My name is Angel Avila, and I am an aspiring web developer passionate about building applications, reading, and entrepreneurship. I enjoy transforming concepts into responsive digital experiences using modern HTML, CSS, and JavaScript techniques. Welcome to my portfolio hub!</p>
         </section>
 
         <!-- Projects Section -->
         <section id="projects">
             <h2>Projects</h2>
-            <div class="projects-grid">
+            <div class="projects-grid" id="projectsGrid">
                 <div class="project-card">
                     <img src="https://via.placeholder.com/300x140?text=Form+Validation" alt="Project 1">
                     <h3>Form Validation</h3>
@@ -160,7 +165,7 @@
         <!-- Contact Section -->
         <section id="contact">
             <h2>Contact Me</h2>
-            <form action="#" method="POST">
+            <form id="contactForm">
                 <div class="form-group">
                     <label for="senderName">Sender Name:</label>
                     <input type="text" id="senderName" name="senderName" required>
@@ -179,15 +184,13 @@
                 </div>
                 <button type="submit">Submit Message</button>
             </form>
+            <!-- Dynamic container for form submission feedback -->
+            <div id="formStatus"></div>
         </section>
     </div>
 
     <script>
-        /*
-            JavaScript User Interaction:
-            Prompts the visitor for their name and dynamically updates 
-            the welcome heading to personalize their portfolio browsing experience.
-        */
+        // 1. JavaScript User Interaction: Prompt for name and update welcome message
         const userName = prompt("Please enter your name:");
         const welcomeHeader = document.getElementById("welcomeMsg");
 
@@ -196,6 +199,47 @@
         } else {
             welcomeHeader.textContent = "Welcome to My Portfolio, Guest!";
         }
+
+        // 2. Reference and Modify Existing Elements with Selectors
+        // Selecting the About heading and modifying its text and color style
+        const aboutHeading = document.querySelector("#aboutHeading");
+        aboutHeading.textContent = "About Me & Professional Background";
+        aboutHeading.style.color = "#16a085";
+
+        // Selecting the header title and changing its style border/padding
+        const headerTitle = document.getElementById("headerTitle");
+        headerTitle.style.borderBottom = "2px solid #16a085";
+
+        // 3. Dynamically Add a New Element Using JavaScript
+        // Creating a new paragraph introducing a recent milestone and appending it to the About section
+        const aboutSection = document.getElementById("about");
+        const dynamicIntro = document.createElement("p");
+        dynamicIntro.textContent = "Recent Update: I have successfully implemented advanced DOM manipulation and state management scripts into this portfolio framework.";
+        dynamicIntro.style.fontStyle = "italic";
+        dynamicIntro.style.color = "#555";
+        aboutSection.appendChild(dynamicIntro);
+
+        // 4. Timed Confirmation for Form Submissions
+        const contactForm = document.getElementById("contactForm");
+        const formStatus = document.getElementById("formStatus");
+
+        contactForm.addEventListener("submit", function(event) {
+            // Prevent default form submission behavior
+            event.preventDefault();
+
+            // Display loading or "sending message..." state dynamically
+            formStatus.textContent = "Sending message...";
+            formStatus.style.color = "#e67e22"; // Orange loading color
+
+            // Use setTimeout() to delay the success confirmation message by 2 seconds
+            setTimeout(function() {
+                formStatus.textContent = "Message sent successfully!";
+                formStatus.style.color = "#27ae60"; // Green success color
+                
+                // Optionally reset the form fields after successful submission
+                contactForm.reset();
+            }, 2000);
+        });
     </script>
 
 </body>
