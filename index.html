@@ -1,1 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+        Project: GitHub Prep and Structural Implementation
+        Name: Angel Avila
+        Date: August 30, 2026
+        Purpose: This portfolio index file establishes the core HTML structure, 
+        navigation links, content sections (About, Projects, Contact), and uses 
+        JavaScript prompt interactions to personalize the user's welcome message.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angel Avila - Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f9;
+        }
+        header {
+            background: #2c3e50;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .hero {
+            background: #34495e;
+            color: #fff;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        section {
+            margin-bottom: 40px;
+        }
+        h2 {
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 8px;
+            color: #2c3e50;
+        }
+        .projects-grid {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .project-card {
+            flex: 1;
+            min-width: 250px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            background: #fafafa;
+        }
+        .project-card img {
+            max-width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #34495e;
+        }
+    </style>
+</head>
+<body>
 
+    <header>
+        <h1>Angel Avila</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h2 id="welcomeMsg">Welcome to My Portfolio!</h2>
+    </div>
+
+    <div class="container">
+        <!-- About Section -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Hello! My name is Angel Avila, and I am an aspiring web developer passionate about building applications, reading, and entrepreneurship. I enjoy transforming concepts into responsive digital experiences using modern HTML, CSS, and JavaScript techniques. Welcome to my portfolio hub!</p>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/300x140?text=Form+Validation" alt="Project 1">
+                    <h3>Form Validation</h3>
+                    <p>A client-side signup form implementing jQuery and validator.js live checks.</p>
+                    <a href="https://github.com" target="_blank">View on GitHub</a>
+                </div>
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/300x140?text=Heart+Rate+Calc" alt="Project 2">
+                    <h3>Target Heart Rate Calculator</h3>
+                    <p>An interactive calculator determining target heart rate ranges based on age formulas.</p>
+                    <a href="https://github.com" target="_blank">View on GitHub</a>
+                </div>
+                <div class="project-card">
+                    <img src="https://via.placeholder.com/300x140?text=Road+Trip+Summary" alt="Project 3">
+                    <h3>Road Trip Summary</h3>
+                    <p>A state-management application utilizing cookies, session storage, and custom objects.</p>
+                    <a href="https://github.com" target="_blank">View on GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="senderName">Sender Name:</label>
+                    <input type="text" id="senderName" name="senderName" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderEmail">Email Address:</label>
+                    <input type="email" id="senderEmail" name="senderEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject:</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit">Submit Message</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        /*
+            JavaScript User Interaction:
+            Prompts the visitor for their name and dynamically updates 
+            the welcome heading to personalize their portfolio browsing experience.
+        */
+        const userName = prompt("Please enter your name:");
+        const welcomeHeader = document.getElementById("welcomeMsg");
+
+        if (userName && userName.trim() !== "") {
+            welcomeHeader.textContent = "Welcome to My Portfolio, " + userName.trim() + "!";
+        } else {
+            welcomeHeader.textContent = "Welcome to My Portfolio, Guest!";
+        }
+    </script>
+
+</body>
+</html>
