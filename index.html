@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <!--
-        Project: Conditional Logic, Loops, and Interactivity
+        Project: Persistent Storage, Modals, and Tooltips
         Name: Angel Avila
         Date: August 30, 2026
-        Purpose: This portfolio index file implements conditional display logic, 
-        a JavaScript array loop for skills, a dark mode toggle switch, and form submission feedback.
+        Purpose: This portfolio index file replaces the prompt with a custom modal, 
+        adds a tooltip to the submit button, and implements persistent dark mode storage using localStorage.
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,6 +172,12 @@
             background-color: #fff;
             color: #333;
         }
+        
+        /* Submit Button & Tooltip Wrapper */
+        .button-wrapper {
+            position: relative;
+            display: inline-block;
+        }
         button {
             background: #2c3e50;
             color: #fff;
@@ -183,6 +189,60 @@
         }
         button:hover {
             background: #34495e;
+        }
+        /* Tooltip Styling */
+        .tooltip {
+            visibility: hidden;
+            width: 180px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        .button-wrapper:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Custom Welcome Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .modal-content p {
+            color: #555;
+            margin-bottom: 20px;
         }
 
         /* Dark Mode Theme Classes */
@@ -218,9 +278,28 @@
             color: #fff;
             border-color: #555;
         }
+        body.dark-mode .modal-content {
+            background: #242424;
+            color: #f4f4f9;
+        }
+        body.dark-mode .modal-content h3 {
+            color: #16a085;
+        }
+        body.dark-mode .modal-content p {
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Custom Welcome Modal Overlay -->
+    <div id="welcomeModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Notice</h3>
+            <p>This page is a work in progress.</p>
+            <button id="closeModalBtn">Close</button>
+        </div>
+    </div>
 
     <header>
         <h1>Angel Avila</h1>
@@ -322,21 +401,23 @@
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" rows="5" required></textarea>
                 </div>
-                <button type="submit" id="submitBtn">Submit Message</button>
+                <!-- Submit Button with Tooltip Wrapper -->
+                <div class="button-wrapper">
+                    <button type="submit" id="submitBtn">Submit Message</button>
+                    <span class="tooltip">Click to send your message!</span>
+                </div>
             </form>
         </section>
     </div>
 
     <script>
-        // 1. JavaScript User Interaction: Personalized Welcome Prompt
-        const userName = prompt("Please enter your name:");
-        const welcomeHeader = document.getElementById("welcomeMsg");
+        // 1. Custom Welcome Modal Dismissal Logic
+        const welcomeModal = document.getElementById("welcomeModal");
+        const closeModalBtn = document.getElementById("closeModalBtn");
 
-        if (userName && userName.trim() !== "") {
-            welcomeHeader.textContent = "Welcome to My Portfolio, " + userName.trim() + "!";
-        } else {
-            welcomeHeader.textContent = "Welcome to My Portfolio, Guest!";
-        }
+        closeModalBtn.addEventListener("click", function() {
+            welcomeModal.style.display = "none";
+        });
 
         // 2. Implement a Loop: Array of skills rendered as a bulleted list in About section
         const skills = ["HTML", "CSS", "JavaScript", "Git", "GitHub"];
@@ -354,21 +435,33 @@
         const personalProjectsDiv = document.getElementById("personalProjects");
 
         if (projectCards.length < 3) {
-            // Fewer than 3 projects: Show both University Resources and Personal Projects
             uniResourcesDiv.style.display = "block";
             personalProjectsDiv.style.display = "block";
         } else {
-            // Otherwise (3 or more projects): Show Personal Projects, hide University Resources
             personalProjectsDiv.style.display = "block";
             uniResourcesDiv.style.display = "none";
         }
 
-        // 4. Add Dark Mode Slider with event listener and class toggling
+        // 4. Persist Dark Mode Preference via localStorage
         const darkModeToggle = document.getElementById("darkModeToggle");
         const bodyElement = document.body;
 
+        // Check for saved user preference in localStorage on initial page load
+        const currentTheme = localStorage.getItem("theme");
+        if (currentTheme === "dark") {
+            bodyElement.classList.add("dark-mode");
+            darkModeToggle.checked = true;
+        }
+
+        // Event listener to toggle dark mode and save preference to localStorage
         darkModeToggle.addEventListener("change", function() {
-            bodyElement.classList.toggle("dark-mode");
+            if (darkModeToggle.checked) {
+                bodyElement.classList.add("dark-mode");
+                localStorage.setItem("theme", "dark");
+            } else {
+                bodyElement.classList.remove("dark-mode");
+                localStorage.setItem("theme", "light");
+            }
         });
 
         // 5. Add Interactivity to the Form Submit Button
