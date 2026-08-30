@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <!--
-        Project: Creating and Referencing DOM Elements
+        Project: Conditional Logic, Loops, and Interactivity
         Name: Angel Avila
         Date: August 30, 2026
-        Purpose: This portfolio index file implements dynamic DOM element creation, 
-        selector-based element modifications, and a timed confirmation message for form submissions.
+        Purpose: This portfolio index file implements conditional display logic, 
+        a JavaScript array loop for skills, a dark mode toggle switch, and form submission feedback.
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +19,7 @@
             line-height: 1.6;
             color: #333;
             background-color: #f4f4f9;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         header {
             background: #2c3e50;
@@ -28,15 +29,66 @@
             justify-content: space-between;
             align-items: center;
         }
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
         nav a {
             color: #fff;
             text-decoration: none;
-            margin-left: 20px;
             font-weight: bold;
         }
         nav a:hover {
             text-decoration: underline;
         }
+        
+        /* Dark Mode Toggle Switch Styling */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #16a085;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
         .hero {
             background: #34495e;
             color: #fff;
@@ -50,6 +102,7 @@
             background: #fff;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         section {
             margin-bottom: 40px;
@@ -72,6 +125,7 @@
             border-radius: 5px;
             text-align: center;
             background: #fafafa;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .project-card img {
             max-width: 100%;
@@ -80,6 +134,27 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
+        
+        /* Featured Content Section Styles */
+        .featured-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .feature-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px;
+            border: 2px solid #2c3e50;
+            border-radius: 6px;
+            background: #f9f9f9;
+        }
+        .feature-box h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
@@ -94,6 +169,8 @@
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            background-color: #fff;
+            color: #333;
         }
         button {
             background: #2c3e50;
@@ -107,22 +184,58 @@
         button:hover {
             background: #34495e;
         }
-        /* Styling for dynamic form status messages */
-        #formStatus {
-            margin-top: 15px;
-            font-weight: bold;
-            font-size: 16px;
+
+        /* Dark Mode Theme Classes */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #f4f4f9;
+        }
+        body.dark-mode header {
+            background: #111;
+        }
+        body.dark-mode .container {
+            background: #242424;
+            color: #f4f4f9;
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+        }
+        body.dark-mode .hero {
+            background: #222;
+        }
+        body.dark-mode h2 {
+            border-bottom: 2px solid #16a085;
+            color: #16a085;
+        }
+        body.dark-mode .project-card, body.dark-mode .feature-box {
+            background: #2d2d2d;
+            border-color: #444;
+            color: #f4f4f9;
+        }
+        body.dark-mode .feature-box h3 {
+            color: #16a085;
+        }
+        body.dark-mode input, body.dark-mode textarea {
+            background-color: #333;
+            color: #fff;
+            border-color: #555;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 id="headerTitle">Angel Avila</h1>
+        <h1>Angel Avila</h1>
         <nav>
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
             <a href="#contact">Contact</a>
+            <!-- Dark Mode Toggle Switch -->
+            <div class="theme-switch-wrapper">
+                <span>Dark Mode</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </nav>
     </header>
 
@@ -133,8 +246,35 @@
     <div class="container">
         <!-- About Section -->
         <section id="about">
-            <h2 id="aboutHeading">About Me</h2>
+            <h2>About Me</h2>
             <p>Hello! My name is Angel Avila, and I am an aspiring web developer passionate about building applications, reading, and entrepreneurship. I enjoy transforming concepts into responsive digital experiences using modern HTML, CSS, and JavaScript techniques. Welcome to my portfolio hub!</p>
+            
+            <!-- Container where skills list will be populated dynamically via loop -->
+            <div id="skillsContainer">
+                <h3>Technical Skills:</h3>
+                <ul id="skillsList"></ul>
+            </div>
+        </section>
+
+        <!-- Featured Content Section (Conditional Logic Target) -->
+        <section id="featured">
+            <h2>Featured Content</h2>
+            <div class="featured-container">
+                <!-- University Resources Div -->
+                <div id="uniResources" class="feature-box">
+                    <h3>University Resources</h3>
+                    <p>Check out my academic home and program details:</p>
+                    <ul>
+                        <li><a href="https://www.ecpi.edu" target="_blank">ECPI University Program Home</a></li>
+                    </ul>
+                </div>
+                <!-- Personal Projects Div -->
+                <div id="personalProjects" class="feature-box">
+                    <h3>Personal Projects</h3>
+                    <p>Explore my development work across repositories:</p>
+                    <p><a href="https://github.com/LetsgoNever93" target="_blank"><img src="https://via.placeholder.com/250x100?text=GitHub+Profile" alt="GitHub Projects"></a></p>
+                </div>
+            </div>
         </section>
 
         <!-- Projects Section -->
@@ -165,7 +305,7 @@
         <!-- Contact Section -->
         <section id="contact">
             <h2>Contact Me</h2>
-            <form id="contactForm">
+            <form id="contactForm" action="#" method="POST">
                 <div class="form-group">
                     <label for="senderName">Sender Name:</label>
                     <input type="text" id="senderName" name="senderName" required>
@@ -182,15 +322,13 @@
                     <label for="message">Message:</label>
                     <textarea id="message" name="message" rows="5" required></textarea>
                 </div>
-                <button type="submit">Submit Message</button>
+                <button type="submit" id="submitBtn">Submit Message</button>
             </form>
-            <!-- Dynamic container for form submission feedback -->
-            <div id="formStatus"></div>
         </section>
     </div>
 
     <script>
-        // 1. JavaScript User Interaction: Prompt for name and update welcome message
+        // 1. JavaScript User Interaction: Personalized Welcome Prompt
         const userName = prompt("Please enter your name:");
         const welcomeHeader = document.getElementById("welcomeMsg");
 
@@ -200,45 +338,56 @@
             welcomeHeader.textContent = "Welcome to My Portfolio, Guest!";
         }
 
-        // 2. Reference and Modify Existing Elements with Selectors
-        // Selecting the About heading and modifying its text and color style
-        const aboutHeading = document.querySelector("#aboutHeading");
-        aboutHeading.textContent = "About Me & Professional Background";
-        aboutHeading.style.color = "#16a085";
+        // 2. Implement a Loop: Array of skills rendered as a bulleted list in About section
+        const skills = ["HTML", "CSS", "JavaScript", "Git", "GitHub"];
+        const skillsListElement = document.getElementById("skillsList");
 
-        // Selecting the header title and changing its style border/padding
-        const headerTitle = document.getElementById("headerTitle");
-        headerTitle.style.borderBottom = "2px solid #16a085";
+        for (let i = 0; i < skills.length; i++) {
+            const listItem = document.createElement("li");
+            listItem.textContent = skills[i];
+            skillsListElement.appendChild(listItem);
+        }
 
-        // 3. Dynamically Add a New Element Using JavaScript
-        // Creating a new paragraph introducing a recent milestone and appending it to the About section
-        const aboutSection = document.getElementById("about");
-        const dynamicIntro = document.createElement("p");
-        dynamicIntro.textContent = "Recent Update: I have successfully implemented advanced DOM manipulation and state management scripts into this portfolio framework.";
-        dynamicIntro.style.fontStyle = "italic";
-        dynamicIntro.style.color = "#555";
-        aboutSection.appendChild(dynamicIntro);
+        // 3. Add Conditional Logic: Check project count to display/hide featured content divs
+        const projectCards = document.querySelectorAll(".projects-grid .project-card");
+        const uniResourcesDiv = document.getElementById("uniResources");
+        const personalProjectsDiv = document.getElementById("personalProjects");
 
-        // 4. Timed Confirmation for Form Submissions
+        if (projectCards.length < 3) {
+            // Fewer than 3 projects: Show both University Resources and Personal Projects
+            uniResourcesDiv.style.display = "block";
+            personalProjectsDiv.style.display = "block";
+        } else {
+            // Otherwise (3 or more projects): Show Personal Projects, hide University Resources
+            personalProjectsDiv.style.display = "block";
+            uniResourcesDiv.style.display = "none";
+        }
+
+        // 4. Add Dark Mode Slider with event listener and class toggling
+        const darkModeToggle = document.getElementById("darkModeToggle");
+        const bodyElement = document.body;
+
+        darkModeToggle.addEventListener("change", function() {
+            bodyElement.classList.toggle("dark-mode");
+        });
+
+        // 5. Add Interactivity to the Form Submit Button
+        const submitButton = document.getElementById("submitBtn");
         const contactForm = document.getElementById("contactForm");
-        const formStatus = document.getElementById("formStatus");
+        const senderNameInput = document.getElementById("senderName");
 
-        contactForm.addEventListener("submit", function(event) {
-            // Prevent default form submission behavior
+        submitButton.addEventListener("click", function(event) {
+            // Prevent default page refresh behavior
             event.preventDefault();
 
-            // Display loading or "sending message..." state dynamically
-            formStatus.textContent = "Sending message...";
-            formStatus.style.color = "#e67e22"; // Orange loading color
+            // Retrieve name input or default to Guest if empty
+            const nameValue = senderNameInput.value.trim() || "Guest";
 
-            // Use setTimeout() to delay the success confirmation message by 2 seconds
-            setTimeout(function() {
-                formStatus.textContent = "Message sent successfully!";
-                formStatus.style.color = "#27ae60"; // Green success color
-                
-                // Optionally reset the form fields after successful submission
-                contactForm.reset();
-            }, 2000);
+            // Display confirmation alert using user's input
+            alert("Thank you, " + nameValue + ", your message has been sent!");
+
+            // Optionally reset form after submission
+            contactForm.reset();
         });
     </script>
 
