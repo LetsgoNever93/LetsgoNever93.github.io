@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <!--
-        Project: Persistent Storage, Modals, and Tooltips
+        Project: Dynamic Project Objects and Session Storage
         Name: Angel Avila
         Date: August 30, 2026
-        Purpose: This portfolio index file replaces the prompt with a custom modal, 
-        adds a tooltip to the submit button, and implements persistent dark mode storage using localStorage.
+        Purpose: This portfolio index file defines project data objects, stores and parses 
+        them using sessionStorage, and dynamically renders the project cards to the DOM.
     -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -359,26 +359,8 @@
         <!-- Projects Section -->
         <section id="projects">
             <h2>Projects</h2>
-            <div class="projects-grid" id="projectsGrid">
-                <div class="project-card">
-                    <img src="https://via.placeholder.com/300x140?text=Form+Validation" alt="Project 1">
-                    <h3>Form Validation</h3>
-                    <p>A client-side signup form implementing jQuery and validator.js live checks.</p>
-                    <a href="https://github.com" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <img src="https://via.placeholder.com/300x140?text=Heart+Rate+Calc" alt="Project 2">
-                    <h3>Target Heart Rate Calculator</h3>
-                    <p>An interactive calculator determining target heart rate ranges based on age formulas.</p>
-                    <a href="https://github.com" target="_blank">View on GitHub</a>
-                </div>
-                <div class="project-card">
-                    <img src="https://via.placeholder.com/300x140?text=Road+Trip+Summary" alt="Project 3">
-                    <h3>Road Trip Summary</h3>
-                    <p>A state-management application utilizing cookies, session storage, and custom objects.</p>
-                    <a href="https://github.com" target="_blank">View on GitHub</a>
-                </div>
-            </div>
+            <!-- Projects grid container that will be populated dynamically via JavaScript -->
+            <div class="projects-grid" id="projectsGrid"></div>
         </section>
 
         <!-- Contact Section -->
@@ -429,12 +411,77 @@
             skillsListElement.appendChild(listItem);
         }
 
-        // 3. Add Conditional Logic: Check project count to display/hide featured content divs
-        const projectCards = document.querySelectorAll(".projects-grid .project-card");
+        // 3. Define Custom Project Objects and Manage via sessionStorage
+        const projectsArray = [
+            {
+                title: "Form Validation",
+                summary: "A client-side signup form implementing jQuery and validator.js live checks.",
+                imageUrl: "https://via.placeholder.com/300x140?text=Form+Validation",
+                repoLink: "https://github.com"
+            },
+            {
+                title: "Target Heart Rate Calculator",
+                summary: "An interactive calculator determining target heart rate ranges based on age formulas.",
+                imageUrl: "https://via.placeholder.com/300x140?text=Heart+Rate+Calc",
+                repoLink: "https://github.com"
+            },
+            {
+                title: "Road Trip Summary",
+                summary: "A state-management application utilizing cookies, session storage, and custom objects.",
+                imageUrl: "https://via.placeholder.com/300x140?text=Road+Trip+Summary",
+                repoLink: "https://github.com"
+            }
+        ];
+
+        // Check sessionStorage for existing project data; if not present, store serialized array
+        if (!sessionStorage.getItem("portfolioProjects")) {
+            sessionStorage.setItem("portfolioProjects", JSON.stringify(projectsArray));
+        }
+
+        // Retrieve and parse project data from sessionStorage
+        const storedProjects = JSON.parse(sessionStorage.getItem("portfolioProjects"));
+
+        // 4. Render Projects Dynamically into the DOM
+        const projectsGrid = document.getElementById("projectsGrid");
+
+        storedProjects.forEach(project => {
+            // Create project card container element
+            const cardDiv = document.createElement("div");
+            cardDiv.className = "project-card";
+
+            // Create image element
+            const imgElem = document.createElement("img");
+            imgElem.src = project.imageUrl;
+            imgElem.alt = project.title;
+
+            // Create heading element for title
+            const titleElem = document.createElement("h3");
+            titleElem.textContent = project.title;
+
+            // Create paragraph element for summary
+            const summaryElem = document.createElement("p");
+            summaryElem.textContent = project.title + ": " + project.summary;
+
+            // Create link element for repository
+            const linkElem = document.createElement("a");
+            linkElem.href = project.repoLink;
+            linkElem.target = "_blank";
+            linkElem.textContent = "View on GitHub";
+
+            // Append child elements to card, then card to grid
+            cardDiv.appendChild(imgElem);
+            cardDiv.appendChild(titleElem);
+            cardDiv.appendChild(summaryElem);
+            cardDiv.appendChild(linkElem);
+            projectsGrid.appendChild(cardDiv);
+        });
+
+        // 5. Add Conditional Logic: Check project count to display/hide featured content divs
+        const projectCardsList = document.querySelectorAll(".projects-grid .project-card");
         const uniResourcesDiv = document.getElementById("uniResources");
         const personalProjectsDiv = document.getElementById("personalProjects");
 
-        if (projectCards.length < 3) {
+        if (projectCardsList.length < 3) {
             uniResourcesDiv.style.display = "block";
             personalProjectsDiv.style.display = "block";
         } else {
@@ -442,18 +489,16 @@
             uniResourcesDiv.style.display = "none";
         }
 
-        // 4. Persist Dark Mode Preference via localStorage
+        // 6. Persist Dark Mode Preference via localStorage
         const darkModeToggle = document.getElementById("darkModeToggle");
         const bodyElement = document.body;
 
-        // Check for saved user preference in localStorage on initial page load
         const currentTheme = localStorage.getItem("theme");
         if (currentTheme === "dark") {
             bodyElement.classList.add("dark-mode");
             darkModeToggle.checked = true;
         }
 
-        // Event listener to toggle dark mode and save preference to localStorage
         darkModeToggle.addEventListener("change", function() {
             if (darkModeToggle.checked) {
                 bodyElement.classList.add("dark-mode");
@@ -464,22 +509,15 @@
             }
         });
 
-        // 5. Add Interactivity to the Form Submit Button
+        // 7. Add Interactivity to the Form Submit Button
         const submitButton = document.getElementById("submitBtn");
         const contactForm = document.getElementById("contactForm");
         const senderNameInput = document.getElementById("senderName");
 
         submitButton.addEventListener("click", function(event) {
-            // Prevent default page refresh behavior
             event.preventDefault();
-
-            // Retrieve name input or default to Guest if empty
             const nameValue = senderNameInput.value.trim() || "Guest";
-
-            // Display confirmation alert using user's input
             alert("Thank you, " + nameValue + ", your message has been sent!");
-
-            // Optionally reset form after submission
             contactForm.reset();
         });
     </script>
